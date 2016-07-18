@@ -24,7 +24,7 @@ namespace ClassLibraryLogicBookNUnit
             Book sBook = new Book("Richter", "CLR via C#", 2013, 896);
 
             bool expected = true;
-            
+
             bool actual = (fBook == sBook);
 
             Assert.AreEqual(expected, actual, "{0} != {1}", expected, actual);
@@ -95,11 +95,9 @@ namespace ClassLibraryLogicBookNUnit
                 new Book("Albahari", "C# 5.0 in nutshell", 2014, 1008)
             };
             
-            Book[] actual = Book.SortBooks(testBooks, new SortBookYear());
+            Book.SortBooks(testBooks, new SortBookYear());
 
-            Assert.AreEqual(expected[0], actual[0], "{0} != {1}", expected[0], actual[0]);
-            Assert.AreEqual(expected[1], actual[1], "{0} != {1}", expected[1], actual[1]);
-            Assert.AreEqual(expected[2], actual[2], "{0} != {1}", expected[2], actual[2]);
+            CollectionAssert.AreEqual(expected, testBooks);
         }
 
         [Test]
@@ -115,11 +113,9 @@ namespace ClassLibraryLogicBookNUnit
                 new Book("Richter", "CLR via C#", 2013, 896)
             };
             
-            Book[] actual = Book.SortBooks(testBooks, new SortBookAuthor());
+            Book.SortBooks(testBooks, new SortBookAuthor());
 
-            Assert.AreEqual(expected[0], actual[0], "{0} != {1}", expected[0], actual[0]);
-            Assert.AreEqual(expected[1], actual[1], "{0} != {1}", expected[1], actual[1]);
-            Assert.AreEqual(expected[2], actual[2], "{0} != {1}", expected[2], actual[2]);
+            CollectionAssert.AreEqual(expected, testBooks);
         }
 
         [Test]
@@ -135,11 +131,9 @@ namespace ClassLibraryLogicBookNUnit
                 new Book("Albahari", "C# 5.0 in nutshell", 2014, 1008)
             };
 
-            Book[] actual = Book.SortBooks(testBooks, new SortBookPages());
+            Book.SortBooks(testBooks, new SortBookPages());
 
-            Assert.AreEqual(expected[0], actual[0], "{0} != {1}", expected[0], actual[0]);
-            Assert.AreEqual(expected[1], actual[1], "{0} != {1}", expected[1], actual[1]);
-            Assert.AreEqual(expected[2], actual[2], "{0} != {1}", expected[2], actual[2]);
+            CollectionAssert.AreEqual(expected, testBooks);
         }
 
         [Test]
@@ -156,11 +150,8 @@ namespace ClassLibraryLogicBookNUnit
             };
 
             Array.Sort(testBooks);
-            Book[] actual = testBooks;
 
-            Assert.AreEqual(expected[0], actual[0], "{0} != {1}", expected[0], actual[0]);
-            Assert.AreEqual(expected[1], actual[1], "{0} != {1}", expected[1], actual[1]);
-            Assert.AreEqual(expected[2], actual[2], "{0} != {1}", expected[2], actual[2]);
+            CollectionAssert.AreEqual(expected, testBooks);
         }
     }
 }

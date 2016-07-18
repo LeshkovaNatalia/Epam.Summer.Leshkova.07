@@ -8,18 +8,50 @@ using System.Text;
 
 namespace ClassLibraryLogicBook
 {
-    public class Book : IEquatable<Book>, IComparable<Book>
+    public sealed class Book : IEquatable<Book>, IComparable<Book>, IComparable
     {
+        #region Fields
+        private int _year;
+        private int _pages;
+        #endregion
+
         #region Properties
 
         public string Author { get; set; }
         public string Title { get; set; }
-        public int Year { get; set; }
-        public int Pages { get; set; }
+
+        public int Year
+        {
+            get { return _year; }
+            private set
+            {
+                if (value > 0)
+                    _year = value;
+                else
+                    throw new ArgumentNullException(nameof(value));
+            }
+        }
+
+        public int Pages
+        {
+            get { return _pages; }
+            private set
+            {
+                if (value > 0)
+                    _pages = value;
+                else
+                    throw new ArgumentNullException(nameof(value));
+            }
+        }
 
         #endregion
 
         #region Ctor
+
+        public Book()
+        {
+            
+        }
 
         public Book(string author, string title, int year, int pages)
         {
@@ -29,6 +61,14 @@ namespace ClassLibraryLogicBook
             Pages = pages;
         }
 
+        public Book(Book book)
+        {
+            Book b = new Book();
+            b.Author = book.Author;
+            b.Title = book.Title;
+            b.Year = book.Year;
+            b.Pages = book.Pages;
+        }
         #endregion
 
         #region Public Methods
@@ -36,7 +76,7 @@ namespace ClassLibraryLogicBook
         /// <summary>
         /// Method SortBooks sorts array of books according to the comparator
         /// </summary>
-        public static Book[] SortBooks(Book[] books, IComparer<Book> comparer)
+        public static void SortBooks(Book[] books, IComparer<Book> comparer)
         {
             for (int i = 0; i < books.Length - 1; i++)
             {
@@ -46,7 +86,6 @@ namespace ClassLibraryLogicBook
                         SwapBooks(ref books[i], ref books[j]);
                 }
             }
-            return books;
         }
 
         #region Override Object Methods
@@ -88,6 +127,9 @@ namespace ClassLibraryLogicBook
 
         #region Method Equals. Overload operations == | !=
 
+        /// <summary>
+        /// Realisation of method Equals of interface IEquatable<Book>
+        /// </summary>
         public bool Equals(Book other)
         {
             if (ReferenceEquals(null, other))
@@ -98,41 +140,126 @@ namespace ClassLibraryLogicBook
             return CompareFields(this, other);
         }
 
+        /// <summary>
+        /// Overload operator Equality
+        /// </summary>
+        /// <param name="lhs">Left operand</param>
+        /// <param name="rhs">Right operand</param>
+        /// <returns>True if left operand == right operand</returns>
         public static bool operator ==(Book lhs, Book rhs)
         {
-            if ((object)lhs == null || (object)rhs == null)
+            if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
                 return Equals(lhs, rhs);
 
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(Book lhs, Book rhs)
-        {
-            if ((object)lhs == null || (object)rhs == null)
-                return ! Equals(lhs, rhs);
-
-            return ! lhs.Equals(rhs);
-        }
-
+        /// <summary>
+        /// Overload operator Inequality
+        /// </summary>
+        /// <param name="lhs">Left operand</param>
+        /// <param name="rhs">Right operand</param>
+        /// <returns>True if left operand != right operand</returns>
+        public static bool operator !=(Book lhs, Book rhs) => !(lhs == rhs);
+        
         #endregion
 
         #region Method CompareTo. Overload operations > | >= | < | <=
 
-        public static bool operator >(Book lhs, Book rhs) => lhs.Pages > rhs.Pages;
+        /// <summary>
+        /// Overload operator GreaterThan
+        /// </summary>
+        /// <param name="lhs">Left operand</param>
+        /// <param name="rhs">Right operand</param>
+        /// <returns>True if left operand > right operand</returns>
+        public static bool operator >(Book lhs, Book rhs)
+        {
+            CheckBooks(lhs, rhs);
 
-        public static bool operator >=(Book lhs, Book rhs) => lhs.Pages >= rhs.Pages;
+            return lhs.Pages > rhs.Pages;
+        }
 
-        public static bool operator <(Book lhs, Book rhs) => lhs.Pages < rhs.Pages;
+        /// <summary>
+        /// Overload operator GreaterThanOrEqual
+        /// </summary>
+        /// <param name="lhs">Left operand</param>
+        /// <param name="rhs">Right operand</param>
+        /// <returns>True if left operand >= right operand</returns>
+        public static bool operator >=(Book lhs, Book rhs)
+        {
+            CheckBooks(lhs, rhs);
 
-        public static bool operator <=(Book lhs, Book rhs) => lhs.Pages <= rhs.Pages;
+            return lhs.Pages >= rhs.Pages;
+        }
 
-        public int CompareTo(Book other) => String.CompareOrdinal(this.Title, other.Title);
-        
+        /// <summary>
+        /// Overload operator LessThan
+        /// </summary>
+        /// <param name="lhs">Left operand</param>
+        /// <param name="rhs">Right operand</param>
+        /// <returns>True if left operand < right operand</returns>
+        public static bool operator <(Book lhs, Book rhs)
+        {
+            CheckBooks(lhs, rhs);
+
+            return lhs.Pages < rhs.Pages;
+        }
+
+        /// <summary>
+        /// Overload operator LessThanOrEqual
+        /// </summary>
+        /// <param name="lhs">Left operand</param>
+        /// <param name="rhs">Right operand</param>
+        /// <returns>True if left operand <= right operand</returns>
+        public static bool operator <=(Book lhs, Book rhs)
+        {
+            CheckBooks(lhs, rhs);
+
+            return lhs.Pages <= rhs.Pages;
+        }
+
+        /// <summary>
+        /// Realisation of method CompareTo of interface IComparable<Book>
+        /// </summary>
+        public int CompareTo(Book other)
+        {
+            if (ReferenceEquals(other, null))
+                throw new ArgumentNullException(nameof(other));
+
+            return String.CompareOrdinal(this.Title, other.Title);
+        }
+
+        /// <summary>
+        /// Realisation of method CompareTo of interface IComparable
+        /// </summary>
+        public int CompareTo(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+                throw new ArgumentNullException(nameof(obj));
+
+            Book otherBook = obj as Book;
+            if (otherBook != null)
+                return this.Pages.CompareTo(otherBook.Pages);
+            else
+                throw new ArgumentException("Object is not a Book");
+        }
+
         #endregion
-        
+
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Method CheckBooks check is book null
+        /// </summary>
+        private static void CheckBooks(Book fBook, Book sBook)
+        {
+            if (fBook == null)
+                throw new ArgumentNullException(nameof(fBook));
+            if (sBook == null)
+                throw new ArgumentNullException(nameof(sBook));
+        }
 
         /// <summary>
         /// Method CompareFields compares the field of books
@@ -159,7 +286,7 @@ namespace ClassLibraryLogicBook
             fBook = sBook;
             sBook = tempBook;
         }
-
+        
         #endregion
     }
 }

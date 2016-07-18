@@ -36,6 +36,9 @@
   <ItemGroup>
     <Compile Include="BookTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SortBookAuthor.cs" />
+    <Compile Include="SortBookPages.cs" />
+    <Compile Include="SortBookYear.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ClassLibraryLogicBook">
